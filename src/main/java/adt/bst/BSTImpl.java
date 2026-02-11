@@ -25,20 +25,39 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public BSTNode<T> search(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		
 	}
+
 
 	@Override
 	public void insert(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> aux =this.root;
+		inserir(aux,element);
+	}
+
+	private void inserir(BSTNode<T> aux, T element) {
+		if (aux.getData() == null) {
+			aux.setData(element);
+			BSTNode<T> nilEsquerdo = new BSTNode<>();
+			aux.setLeft(nilEsquerdo );
+			BSTNode<T> nilDireito = new BSTNode<>();
+			aux.setRight(nilDireito);
+			nilEsquerdo.setParent(aux);
+			nilDireito.setParent(aux);
+		} else if (element.compareTo(aux.getData()) < 0) {
+			inserir((BSTNode<T>)aux.getLeft(), element);
+		} else {
+			inserir((BSTNode<T>)aux.getRight(), element);
+		}
 	}
 
 	@Override
 	public BSTNode<T> maximum() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return achaMaximo(this.root);
+	}
+
+	private BSTNode<T> achaMaximo(BSTNode<T> aux) {
+		
 	}
 
 	@Override
