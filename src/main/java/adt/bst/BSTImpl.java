@@ -20,8 +20,15 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public int height() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return altura(this.root);
+	}
+
+	private int altura(BSTNode<T> no) {
+		int result = -1;
+		if (no.getData() != null) {
+			result = 1 + Math.max(altura((BSTNode<T>)no.getLeft()), altura((BSTNode<T>)no.getRight()));
+		}
+		return result;
 	}
 
 	@Override
@@ -30,7 +37,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private BSTNode<T> busca(BSTNode<T> no, T element) {
-		BSTNode<T> result = no;
+		BSTNode<T> result = new BSTNode<>();
 		if (no.getData() == null || element.equals(no.getData())) {
 			result = no;
 		} else if (element.compareTo(no.getData()) < 0) {
@@ -70,7 +77,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private BSTNode<T> achaMaximo(BSTNode<T> no) {
-		BSTNode<T> result = no;
+		BSTNode<T> result = null;
 		if (no.getData() != null) {
 			BSTNode<T> nextMax = this.achaMaximo((BSTNode<T>)no.getRight());
 			if (nextMax.getData() != null) {
@@ -86,7 +93,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private BSTNode<T> achaMinimo(BSTNode<T> no) {
-		BSTNode<T> result = no;
+		BSTNode<T> result = null;
 		if (no.getData() != null) {
 			BSTNode<T> nextMin = this.achaMinimo((BSTNode<T>)no.getLeft());
 			if (nextMin.getData() != null) {
@@ -118,7 +125,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	public T[] preOrder() {
 		LinkedList<T> l = new LinkedList<>();
 		listarEmPreOrdem(this.root,l);
-		return (T[]) l.toArray();
+		return (T[]) l.toArray(new Comparable[this.size()]);
 	}
 
 	private void listarEmPreOrdem(BSTNode<T> no,LinkedList<T> l ) {
@@ -133,7 +140,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	public T[] order() {
 		LinkedList<T> l = new LinkedList<>();
 		listarEmOrdem(this.root,l);
-		return (T[]) l.toArray(); 
+		return (T[]) l.toArray(new Comparable[this.size()]); 
 	}
 
 	private void listarEmOrdem(BSTNode<T> no, LinkedList<T> l) {
@@ -148,7 +155,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	public T[] postOrder() {
 		LinkedList<T> l = new LinkedList<>();
 		listarEmPosOrdem(this.root,l);
-		return (T[]) l.toArray();
+		return (T[]) l.toArray(new Comparable[this.size()]);
 	}
 
 	private void listarEmPosOrdem(BSTNode<T> no,LinkedList<T> l ) {
