@@ -1,4 +1,5 @@
 package adt.bst;
+import java.util.LinkedList;
 
 public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
@@ -25,29 +26,41 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public BSTNode<T> search(T element) {
-		
+		return busca(this.root, element);
+	}
+
+	private BSTNode<T> busca(BSTNode<T> no, T element) {
+		BSTNode<T> result = no;
+		if (no.getData() == null || element.equals(no.getData())) {
+			result = no;
+		} else if (element.compareTo(no.getData()) < 0) {
+			result = busca((BSTNode<T>)no.getLeft(), element);
+		} else {
+			result = busca((BSTNode<T>)no.getRight(), element);
+		}
+		return result;
 	}
 
 
 	@Override
 	public void insert(T element) {
-		BSTNode<T> aux =this.root;
-		inserir(aux,element);
+		BSTNode<T> no = this.root;
+		inserir(no,element);
 	}
 
-	private void inserir(BSTNode<T> aux, T element) {
-		if (aux.getData() == null) {
-			aux.setData(element);
+	private void inserir(BSTNode<T> no, T element) {
+		if (no.getData() == null) {
+			no.setData(element);
 			BSTNode<T> nilEsquerdo = new BSTNode<>();
-			aux.setLeft(nilEsquerdo );
+			no.setLeft(nilEsquerdo );
 			BSTNode<T> nilDireito = new BSTNode<>();
-			aux.setRight(nilDireito);
-			nilEsquerdo.setParent(aux);
-			nilDireito.setParent(aux);
-		} else if (element.compareTo(aux.getData()) < 0) {
-			inserir((BSTNode<T>)aux.getLeft(), element);
+			no.setRight(nilDireito);
+			nilEsquerdo.setParent(no);
+			nilDireito.setParent(no);
+		} else if (element.compareTo(no.getData()) < 0) {
+			inserir((BSTNode<T>)no.getLeft(), element);
 		} else {
-			inserir((BSTNode<T>)aux.getRight(), element);
+			inserir((BSTNode<T>)no.getRight(), element);
 		}
 	}
 
@@ -56,14 +69,31 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 		return achaMaximo(this.root);
 	}
 
-	private BSTNode<T> achaMaximo(BSTNode<T> aux) {
-		
+	private BSTNode<T> achaMaximo(BSTNode<T> no) {
+		BSTNode<T> result = no;
+		if (no.getData() != null) {
+			BSTNode<T> nextMax = this.achaMaximo((BSTNode<T>)no.getRight());
+			if (nextMax.getData() != null) {
+				result = nextMax;
+			}
+		}
+		return result;
 	}
 
 	@Override
 	public BSTNode<T> minimum() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return this.achaMinimo(this.root);
+	}
+
+	private BSTNode<T> achaMinimo(BSTNode<T> no) {
+		BSTNode<T> result = no;
+		if (no.getData() != null) {
+			BSTNode<T> nextMin = this.achaMinimo((BSTNode<T>)no.getLeft());
+			if (nextMin.getData() != null) {
+				result = nextMin;
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -86,20 +116,47 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public T[] preOrder() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		LinkedList<T> l = new LinkedList<>();
+		listarEmPreOrdem(this.root,l);
+		return (T[]) l.toArray();
+	}
+
+	private void listarEmPreOrdem(BSTNode<T> no,LinkedList<T> l ) {
+		if (no.getData() != null) {
+			l.add(no.getData());
+			listarEmPreOrdem((BSTNode<T>) no.getLeft(), l);
+			listarEmPreOrdem((BSTNode<T>) no.getRight(), l);
+		}
 	}
 
 	@Override
 	public T[] order() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		LinkedList<T> l = new LinkedList<>();
+		listarEmOrdem(this.root,l);
+		return (T[]) l.toArray(); 
+	}
+
+	private void listarEmOrdem(BSTNode<T> no, LinkedList<T> l) {
+		if (no.getData() != null) {
+			listarEmOrdem((BSTNode<T>)no.getLeft(), l);
+			l.add(no.getData());
+			listarEmOrdem((BSTNode<T>)no.getRight(), l);
+		}
 	}
 
 	@Override
 	public T[] postOrder() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		LinkedList<T> l = new LinkedList<>();
+		listarEmPosOrdem(this.root,l);
+		return (T[]) l.toArray();
+	}
+
+	private void listarEmPosOrdem(BSTNode<T> no,LinkedList<T> l ) {
+		if (no.getData() != null) {
+			listarEmPosOrdem((BSTNode<T>) no.getLeft(), l);
+			listarEmPosOrdem((BSTNode<T>) no.getRight(), l);
+			l.add(no.getData());
+		}
 	}
 
 	/**
