@@ -80,8 +80,10 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 		BSTNode<T> result = null;
 		if (no.getData() != null) {
 			BSTNode<T> nextMax = this.achaMaximo((BSTNode<T>)no.getRight());
-			if (nextMax.getData() != null) {
+			if (nextMax != null && nextMax.getData() != null) {
 				result = nextMax;
+			} else {
+				result = no;
 			}
 		}
 		return result;
@@ -96,8 +98,10 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 		BSTNode<T> result = null;
 		if (no.getData() != null) {
 			BSTNode<T> nextMin = this.achaMinimo((BSTNode<T>)no.getLeft());
-			if (nextMin.getData() != null) {
+			if (nextMin != null && nextMin.getData() != null) {
 				result = nextMin;
+			} else {
+				result = no;
 			}
 		}
 		return result;
@@ -105,14 +109,53 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public BSTNode<T> sucessor(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> result = null;
+		BSTNode<T> no = search(element);
+		if (no.getData() != null) {
+			result = achaSucessor(no);
+		}
+		return result;
+		
+	}
+
+	private BSTNode<T> achaSucessor(BSTNode<T> no) {
+		BSTNode<T> result = null;
+		if (no.getRight().getData() != null) {
+			result = achaMinimo((BSTNode<T>)no.getRight());
+		} else {
+			BSTNode<T> pai = (BSTNode<T>)no.getParent();
+			while (pai != null && no == pai.getRight()) {
+				no = pai;
+				pai = (BSTNode<T>)pai.getParent();
+			}
+			result = pai;
+		}
+		return result;
 	}
 
 	@Override
 	public BSTNode<T> predecessor(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> result = null;
+		BSTNode<T> no = search(element);
+		if (no.getData() != null) {
+			result = achaPredecessor(no);
+		}
+		return result;
+	}
+
+	private BSTNode<T> achaPredecessor(BSTNode<T> no) {
+		BSTNode<T> result = null;
+		if (no.getLeft().getData() != null) {
+			result = this.achaMaximo((BSTNode<T>)no.getLeft());
+		} else {
+			BSTNode<T> pai = (BSTNode<T>)no.getParent();
+			while (pai != null && no == pai.getLeft()) {
+				no = pai;
+				pai = (BSTNode<T>)pai.getParent();
+			}
+			result = pai; 
+		}
+		return result;
 	}
 
 	@Override
