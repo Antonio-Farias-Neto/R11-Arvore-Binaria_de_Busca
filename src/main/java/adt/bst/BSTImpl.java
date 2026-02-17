@@ -51,8 +51,10 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public void insert(T element) {
-		BSTNode<T> no = this.root;
-		inserir(no,element);
+			if (element != null) {
+			BSTNode<T> no = this.root;
+			inserir(no,element);
+		}
 	}
 
 	private void inserir(BSTNode<T> no, T element) {
@@ -160,8 +162,58 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public void remove(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> no = this.search(element);
+		if (no.getData() != null) {
+			if (isLeaf(no)) {
+				no.setData(null);
+			} else if (temUmUnicoFilho(no)) {
+				if (!isRoot(no)) {
+					if (no == no.getParent().getLeft()) {
+						if (no.getLeft().getData() != null) {
+							no.getParent().setLeft(no.getLeft());
+							no.getLeft().setParent(no.getParent());
+						} else {
+							no.getParent().setLeft(no.getRight());
+							no.getRight().setParent(no.getParent());
+						}
+					} else {
+						if (no.getLeft().getData() != null) {
+							no.getParent().setRight(no.getLeft());
+							no.getLeft().setParent(no.getParent());
+						} else {
+							no.getParent().setRight(no.getRight());
+							no.getRight().setParent(no.getParent());
+						}
+					}
+				} else {
+					if (no.getLeft().getData() != null) {
+						this.root = (BSTNode<T>)no.getLeft();
+						this.root.setParent(null);
+					} else {
+						this.root = (BSTNode<T>)no.getRight();
+						this.root.setParent(null);
+					}
+				}
+			} else {
+				BSTNode<T> sucessor = this.achaSucessor(no);
+    			T sucessorData = sucessor.getData();
+    			remove(sucessor.getData());
+    			no.setData(sucessorData);
+			}
+		}
+	}
+
+	private boolean isLeaf(BSTNode<T> no) {
+		return no.getLeft().getData() == null && no.getRight().getData() == null;
+	}
+
+	private boolean isRoot(BSTNode<T> no) {
+		return no.getParent() == null;
+	}
+
+	private boolean temUmUnicoFilho(BSTNode<T> no) {
+		return (no.getRight().getData() != null && no.getLeft().getData() == null) ||
+		(no.getRight().getData() == null && no.getLeft().getData() != null);
 	}
 
 	@Override
