@@ -21,10 +21,10 @@ public class FloorCeilBSTImpl extends BSTImpl<Integer> implements FloorCeilBST {
 
 	private BSTNode<Integer> achaFloor(BSTNode<Integer> no, double numero) {
 		BSTNode<Integer> result = new BSTNode<>();
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			if (no.getData() <= numero) {
 				BSTNode<Integer> next = achaFloor((BSTNode<Integer>)no.getRight(), numero);
-				if (next.getData() != null) {
+				if (!next.isEmpty()) {
 					result = next;
 				} else {
 					result = no;
@@ -47,10 +47,10 @@ public class FloorCeilBSTImpl extends BSTImpl<Integer> implements FloorCeilBST {
 
 	private BSTNode<Integer> achaCeil(BSTNode<Integer> no, double numero) {
 		BSTNode<Integer> result = new BSTNode<>();
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			if (no.getData() >= numero) {
 				BSTNode<Integer> next = achaCeil((BSTNode<Integer>)no.getLeft(), numero);
-				if (next.getData() != null) {
+				if (!next.isEmpty()) {
 					result = next;
 				} else {
 					result = no;

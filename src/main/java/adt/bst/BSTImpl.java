@@ -25,7 +25,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	private int altura(BSTNode<T> no) {
 		int result = -1;
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			result = 1 + Math.max(altura((BSTNode<T>)no.getLeft()), altura((BSTNode<T>)no.getRight()));
 		}
 		return result;
@@ -38,7 +38,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	private BSTNode<T> busca(BSTNode<T> no, T element) {
 		BSTNode<T> result = new BSTNode<>();
-		if (no.getData() == null || element.equals(no.getData())) {
+		if (no.isEmpty() || element.equals(no.getData())) {
 			result = no;
 		} else if (element.compareTo(no.getData()) < 0) {
 			result = busca((BSTNode<T>)no.getLeft(), element);
@@ -58,7 +58,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private void inserir(BSTNode<T> no, T element) {
-		if (no.getData() == null) {
+		if (no.isEmpty()) {
 			no.setData(element);
 			BSTNode<T> nilEsquerdo = new BSTNode<>();
 			no.setLeft(nilEsquerdo );
@@ -80,9 +80,9 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	private BSTNode<T> achaMaximo(BSTNode<T> no) {
 		BSTNode<T> result = null;
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			BSTNode<T> nextMax = this.achaMaximo((BSTNode<T>)no.getRight());
-			if (nextMax != null && nextMax.getData() != null) {
+			if (nextMax != null && !nextMax.isEmpty()) {
 				result = nextMax;
 			} else {
 				result = no;
@@ -98,9 +98,9 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	private BSTNode<T> achaMinimo(BSTNode<T> no) {
 		BSTNode<T> result = null;
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			BSTNode<T> nextMin = this.achaMinimo((BSTNode<T>)no.getLeft());
-			if (nextMin != null && nextMin.getData() != null) {
+			if (nextMin != null && !nextMin.isEmpty()) {
 				result = nextMin;
 			} else {
 				result = no;
@@ -113,7 +113,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	public BSTNode<T> sucessor(T element) {
 		BSTNode<T> result = null;
 		BSTNode<T> no = search(element);
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			result = achaSucessor(no);
 		}
 		return result;
@@ -122,7 +122,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	private BSTNode<T> achaSucessor(BSTNode<T> no) {
 		BSTNode<T> result = null;
-		if (no.getRight().getData() != null) {
+		if (!no.getRight().isEmpty()) {
 			result = achaMinimo((BSTNode<T>)no.getRight());
 		} else {
 			BSTNode<T> pai = (BSTNode<T>)no.getParent();
@@ -139,7 +139,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	public BSTNode<T> predecessor(T element) {
 		BSTNode<T> result = null;
 		BSTNode<T> no = search(element);
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			result = achaPredecessor(no);
 		}
 		return result;
@@ -147,7 +147,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	private BSTNode<T> achaPredecessor(BSTNode<T> no) {
 		BSTNode<T> result = null;
-		if (no.getLeft().getData() != null) {
+		if (!no.getLeft().isEmpty()) {
 			result = this.achaMaximo((BSTNode<T>)no.getLeft());
 		} else {
 			BSTNode<T> pai = (BSTNode<T>)no.getParent();
@@ -163,13 +163,13 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	@Override
 	public void remove(T element) {
 		BSTNode<T> no = this.search(element);
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			if (isLeaf(no)) {
 				no.setData(null);
 			} else if (temUmUnicoFilho(no)) {
 				if (!isRoot(no)) {
 					if (no == no.getParent().getLeft()) {
-						if (no.getLeft().getData() != null) {
+						if (!no.getLeft().isEmpty()) {
 							no.getParent().setLeft(no.getLeft());
 							no.getLeft().setParent(no.getParent());
 						} else {
@@ -177,7 +177,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 							no.getRight().setParent(no.getParent());
 						}
 					} else {
-						if (no.getLeft().getData() != null) {
+						if (!no.getLeft().isEmpty()) {
 							no.getParent().setRight(no.getLeft());
 							no.getLeft().setParent(no.getParent());
 						} else {
@@ -186,7 +186,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 						}
 					}
 				} else {
-					if (no.getLeft().getData() != null) {
+					if (!no.getLeft().isEmpty()) {
 						this.root = (BSTNode<T>)no.getLeft();
 						this.root.setParent(null);
 					} else {
@@ -204,7 +204,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private boolean isLeaf(BSTNode<T> no) {
-		return no.getLeft().getData() == null && no.getRight().getData() == null;
+		return no.getLeft().isEmpty() && no.getRight().isEmpty();
 	}
 
 	private boolean isRoot(BSTNode<T> no) {
@@ -212,8 +212,8 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private boolean temUmUnicoFilho(BSTNode<T> no) {
-		return (no.getRight().getData() != null && no.getLeft().getData() == null) ||
-		(no.getRight().getData() == null && no.getLeft().getData() != null);
+		return (!no.getRight().isEmpty() && no.getLeft().isEmpty()) ||
+		(no.getRight().isEmpty() && !no.getLeft().isEmpty());
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private void listarEmPreOrdem(BSTNode<T> no,LinkedList<T> l ) {
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			l.add(no.getData());
 			listarEmPreOrdem((BSTNode<T>) no.getLeft(), l);
 			listarEmPreOrdem((BSTNode<T>) no.getRight(), l);
@@ -239,7 +239,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private void listarEmOrdem(BSTNode<T> no, LinkedList<T> l) {
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			listarEmOrdem((BSTNode<T>)no.getLeft(), l);
 			l.add(no.getData());
 			listarEmOrdem((BSTNode<T>)no.getRight(), l);
@@ -254,7 +254,7 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 	}
 
 	private void listarEmPosOrdem(BSTNode<T> no,LinkedList<T> l ) {
-		if (no.getData() != null) {
+		if (!no.isEmpty()) {
 			listarEmPosOrdem((BSTNode<T>) no.getLeft(), l);
 			listarEmPosOrdem((BSTNode<T>) no.getRight(), l);
 			l.add(no.getData());

@@ -15,10 +15,14 @@ public class SimpleBSTManipulationImpl<T extends Comparable<T>> implements Simpl
 
 	private boolean ehIgual(BSTNode<T> no1, BSTNode<T> no2) {
 		boolean result = true;
-		if ((no1.isEmpty() && !no2.isEmpty() || !no1.isEmpty() && no2.isEmpty()) && !no1.getData().equals(no2.getData())) {
+		if (no1.isEmpty() && !no2.isEmpty() || !no1.isEmpty() && no2.isEmpty()) {
 			result = false;
 		} else if (!no1.isEmpty() && !no2.isEmpty()) {
-			result = ehSimilar((BSTNode<T>)no1.getLeft(),(BSTNode<T>) no2.getLeft()) && ehSimilar((BSTNode<T>)no1.getRight(),(BSTNode<T>) no2.getRight());
+			if (!no1.getData().equals(no2.getData())) {
+				result = false;
+			} else {
+				result = ehIgual((BSTNode<T>)no1.getLeft(), (BSTNode<T>)no2.getLeft()) && ehIgual((BSTNode<T>)no1.getRight(), (BSTNode<T>)no2.getRight());
+			}
 		}
 		return result;
 	}
@@ -40,8 +44,30 @@ public class SimpleBSTManipulationImpl<T extends Comparable<T>> implements Simpl
 
 	@Override
 	public T orderStatistic(BST<T> tree, int k) {
-		// TODO Implement this method
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return kEsimoMenor((BSTNode<T>) tree.getRoot(), k);
+	}
+
+	private T kEsimoMenor(BSTNode<T> no, int k) {
+		T result = null;
+		if (!no.isEmpty()) {
+			int tamanhoEsquerda = size((BSTNode<T>)no.getLeft());
+			if (k == tamanhoEsquerda + 1) {
+				result = no.getData();
+			} else if (k <= tamanhoEsquerda) {
+				result = kEsimoMenor((BSTNode<T>)no.getLeft(), k);
+			} else {
+				result = kEsimoMenor((BSTNode<T>)no.getRight(), k - tamanhoEsquerda - 1);
+			}
+		}
+		return result;	
+	}
+
+	private int size(BSTNode<T> no) {
+		int result = 0;
+		if (!no.isEmpty()) {
+			result = 1 + size((BSTNode<T>) no.getLeft()) + size((BSTNode<T>) no.getRight());
+		}
+		return result;
 	}
 
 }
